@@ -83,7 +83,8 @@ configure_server () {
     then
         echo "Token not found, adding it from env variable..."
         echo "$DST_TOKEN" > .klei/DoNotStarveTogether/Cluster_1/cluster_token.txt
-    else
+    elif [ ! -f ".klei/DoNotStarveTogether/Cluster_1/cluster_token.txt" ] && [ ! -v DST_TOKEN ]
+    then
         echo "Token not found, adding it interactively..."
         ./dstserver cluster-token
         sleep 1
