@@ -1,0 +1,38 @@
+version: '3.4'
+
+services:
+  dst_master:
+    container_name: dst_master
+    image: jmarques15/dont-starve-together
+    build:
+      context: ./build/
+      dockerfile: Dockerfile
+    environment:
+      - DST_SHARD=Master
+    hostname: dst_master
+    networks:
+      - dst-network
+    volumes:
+      - dst-cluster-config:/home/LinuxGSM/.klei/DoNotStarveTogether/Cluster_1/
+    stop_grace_period: 1m30s
+
+  dst_caves:
+    container_name: dst_caves
+    image: jmarques15/dont-starve-together
+    build:
+      context: ./build/
+      dockerfile: Dockerfile
+    environment:
+      - DST_SHARD=Caves
+    hostname: dst_caves
+    networks:
+      - dst-network
+    volumes:
+      - dst-cluster-config:/home/LinuxGSM/.klei/DoNotStarveTogether/Cluster_1/
+    stop_grace_period: 1m30s
+
+networks:
+  dst-network:
+
+volumes:
+  dst-cluster-config:
