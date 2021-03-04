@@ -26,12 +26,12 @@ RUN ./linuxgsm.sh dstserver
 RUN ./dstserver auto-install
 
 # Copy configuration
-COPY --chown=${user}:${user} src/*.cfg lgsm/config-lgsm/dstserver/
-COPY --chown=${user}:${user} src/cluster .klei/DoNotStarveTogether/Cluster_1/
-COPY --chown=${user}:${user} src/dedicated_server_mods_setup.lua serverfiles/mods/dedicated_server_mods_setup.lua
+COPY --chown=${user}:${user} build/*.cfg lgsm/config-lgsm/dstserver/
+COPY --chown=${user}:${user} build/cluster .klei/DoNotStarveTogether/Cluster_1/
+COPY --chown=${user}:${user} build/dedicated_server_mods_setup.lua serverfiles/mods/dedicated_server_mods_setup.lua
 
 # Copy entrypoint
-COPY --chown=${user}:${user} src/entrypoint.sh ./entrypoint.sh
+COPY --chown=${user}:${user} build/entrypoint.sh ./entrypoint.sh
 RUN chmod +x entrypoint.sh
 
 # Start Server

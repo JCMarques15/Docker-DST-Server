@@ -1,38 +1,15 @@
 # Dont-Starve-Together-Server
+This is a simple Dont Starve Together server I created to learn and consolidate some docker concepts related to the building of images and running multi-container solutions. 
+
+The entrypoint.sh script takes care of reading environment variables for easier configuration of the server at startup without the need to fiddle with files directly. To safeguard against restarts, a named volume is created at startup that mounts in both containers to hold server configuration and save information.
 
 ## Create Server Token
 Browse to the website: https://accounts.klei.com/account/game/servers?game=DontStarveTogether
 
 Add a cluster name and click 'Add new server' and finally copy the token.
 
-## Build Image
-### Configure cluster
-Modify as necessary the following files:
-* build/src
-    * dstserver.cfg -> Server settings (such as alerts)
-    * dedicated_server_mods_setup.lua -> Subscribe to mods
-* build/src/cluster
-    * cluster.ini -> Cluster settings
-    * adminlist.txt -> administrator IDs
-    * blocklist.txt -> Blocked user IDs
-    * whitelist.txe -> Whitelisted users IDs (slot reservation)
-* build/src/cluster/Master
-    * server.ini -> Master server configuration
-    * modoverrides.lua -> Enable Mods for Master server
-* build/src/cluster/Caves
-    * server.ini -> Caves server configuration
-    * modoverrides.lua -> Enable Mods for Caves server
-
-Add token to build/src/cluster/cluster_token.txt (create file if necessary).
-
-### Build and start servers
-```bash
-docker-compose up
-```
-Congratulations you have a server ready to use!
-
-## Use pre-built image
-Configure environment variables as necessary. Note: To use mods, the container needs to be started first and using a different entrypoint (to bash for example) mods need to be configured and the container restarted.
+## Starting the server
+Configure environment variables as necessary.
 
 Simple single shard (no caves)
 ```bash
@@ -40,11 +17,12 @@ docker run -d --name dst_master \
 -e DST_NAME="<name>" \
 -e DST_DESCRIPTION="<description>" \
 -e DST_PASSWORD="<password>" \
--e DST_MODE="<mode>" \
--e DST_INTENTION="<intention>" \
--e DST_MAX_PLAYERS="<num_max_players>" \
+-e DST_MODE="<survival|Wilderness|Endless>" \
+-e DST_INTENTION="<Social|Cooperative|Competitive|Madness>" \
+-e DST_MAX_PLAYERS="6" \
 -e DST_PVP="<true|false>" \
 -e DST_TOKEN="<token>" \
+-v dst-cluster-config:/home/LinuxGSM/.klei/DoNotStarveTogether/Cluster_1/ \
 jmarques15/dont-starve-together
 ```
 
@@ -56,23 +34,27 @@ docker run -d --network dst_network -name dst_master \
 -e DST_NAME="<name>" \
 -e DST_DESCRIPTION="<description>" \
 -e DST_PASSWORD="<password>" \
--e DST_MODE="<mode>" \
--e DST_INTENTION="<intention>" \
--e DST_MAX_PLAYERS="<num_max_players>" \
+-e DST_MODE="<survival|Wilderness|Endless>" \
+-e DST_INTENTION="<Social|Cooperative|Competitive|Madness>" \
+-e DST_MAX_PLAYERS="6" \
 -e DST_PVP="<true|false>" \
 -e DST_TOKEN="<token>" \
 -e DST_SHARD=Master \
+-v dst-cluster-config:/home/LinuxGSM/.klei/DoNotStarveTogether/Cluster_1/ \
 jmarques15/dont-starve-together
 
 docker run -d --network dst_network -name dst_caves \
 -e DST_NAME="<name>" \
 -e DST_DESCRIPTION="<description>" \
 -e DST_PASSWORD="<password>" \
--e DST_MODE="<mode>" \
--e DST_INTENTION="<intention>" \
--e DST_MAX_PLAYERS="<num_max_players>" \
+-e DST_MODE="<survival|Wilderness|Endless>" \
+-e DST_INTENTION="<Social|Cooperative|Competitive|Madness>" \
+-e DST_MAX_PLAYERS="6" \
 -e DST_PVP="<true|false>" \
 -e DST_TOKEN="<token>" \
 -e DST_SHARD=Caves \
+-v dst-cluster-config:/home/LinuxGSM/.klei/DoNotStarveTogether/Cluster_1/ \
 jmarques15/dont-starve-together
 ```
+
+Note: docker-compose file for an easier way to spin up a multi-shard environment is included in the github repository. To configure server edit the server.env file.

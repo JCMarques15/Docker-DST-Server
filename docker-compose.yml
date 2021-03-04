@@ -4,9 +4,8 @@ services:
   dst_master:
     container_name: dst_master
     image: jmarques15/dont-starve-together
-    build:
-      context: ./build/
-      dockerfile: Dockerfile
+    env_file:
+      - server.env
     environment:
       - DST_SHARD=Master
     hostname: dst_master
@@ -19,9 +18,8 @@ services:
   dst_caves:
     container_name: dst_caves
     image: jmarques15/dont-starve-together
-    build:
-      context: ./build/
-      dockerfile: Dockerfile
+    env_file:
+      - server.env
     environment:
       - DST_SHARD=Caves
     hostname: dst_caves
